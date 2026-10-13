@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { getBag } from "@/lib/cart";
 import { primaryNav } from "@/lib/catalog";
 import { AccountIcon, BagIcon, SearchIcon } from "./icons";
 import { MobileNav } from "./mobile-nav";
@@ -50,16 +52,42 @@ export function SiteHeader() {
             >
               <AccountIcon />
             </Link>
-            <Link
-              href="/bag"
-              className="btn btn-ghost btn-sm btn-icon"
-              aria-label="Shopping bag"
-            >
-              <BagIcon />
-            </Link>
+            {/* The count reads the bag cookie and live stock, so it streams in after the static shell. */}
+            <Suspense fallback={<BagLink count={0} />}>
+              <BagCount />
+            </Suspense>
           </div>
         </div>
       </header>
     </>
+  );
+}
+
+async function BagCount() {
+  // reconciled like the bag page, so both show the same count when stock has dropped
+  return <BagLink count={(await getBag()).count} />;
+}
+
+function BagLink({ count }: { count: number }) {
+  return (
+    <Link
+      href="/bag"
+      className="btn btn-ghost btn-sm btn-icon relative"
+      aria-label={
+        count > 0
+          ? `Shopping bag, ${count} ${count === 1 ? "item" : "items"}`
+          : "Shopping bag"
+      }
+    >
+      <BagIcon />
+      {count > 0 && (
+        <span
+          aria-hidden="true"
+          className="absolute top-1.5 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-ink px-1 text-2xs leading-none text-paper tabular-nums"
+        >
+          {count}
+        </span>
+      )}
+    </Link>
   );
 }

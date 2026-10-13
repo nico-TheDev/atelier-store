@@ -77,7 +77,7 @@ export const hero = {
   ] satisfies Picture[],
 };
 
-const lowStockThreshold = 3;
+export const lowStockThreshold = 3;
 
 export function getStockState(product: Product): StockState {
   const total = product.stock.reduce((sum, s) => sum + s.quantity, 0);
