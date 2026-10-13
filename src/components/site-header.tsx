@@ -32,7 +32,7 @@ export function SiteHeader() {
             href="/"
             className="pl-[0.32em] text-xl font-normal tracking-[0.32em] uppercase md:text-2xl"
           >
-            Atelier
+            Sartoria
           </Link>
 
           <div className="-mr-3 flex flex-1 items-center justify-end">

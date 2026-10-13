@@ -8,7 +8,7 @@ export function SiteFooter() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="stack gap-4">
             <p className="pl-[0.32em] text-2xl tracking-[0.32em] uppercase">
-              Atelier
+              Sartoria
             </p>
             <p className="type-caption max-w-xs">
               Considered clothing and accessories, made in small runs by
@@ -34,7 +34,7 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="mt-12 flex flex-col gap-2 border-t pt-6 sm:flex-row sm:justify-between">
-          <p className="type-caption">© Atelier. All rights reserved.</p>
+          <p className="type-caption">© Sartoria. All rights reserved.</p>
           <p className="type-caption">United States · English · USD</p>
         </div>
       </div>
