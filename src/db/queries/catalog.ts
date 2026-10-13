@@ -5,7 +5,7 @@
  */
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/db";
-import type { ProductRow } from "@/db/schema";
+import { categories, type ProductRow } from "@/db/schema";
 import type { Product } from "@/lib/catalog";
 
 const withRelations = {
@@ -85,6 +85,81 @@ export async function getRelatedProducts(
       asc(products.id),
     ],
     limit: count,
+  });
+  return rows.map(toProduct);
+}
+
+/* A category and its products, newest first. */
+export async function getCategory(
+  slug: string,
+): Promise<{ slug: string; name: string; products: Product[] } | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+
+  const row = await db.query.categories.findFirst({
+    where: (categories, { eq }) => eq(categories.slug, slug),
+    columns: { slug: true, name: true },
+    with: {
+      products: {
+        with: withRelations,
+        orderBy: (products, { asc, desc }) => [
+          desc(products.createdAt),
+          asc(products.id),
+        ],
+      },
+    },
+  });
+  if (!row) return null;
+
+  return { slug: row.slug, name: row.name, products: row.products.map(toProduct) };
+}
+
+export async function getCategorySlugs(): Promise<string[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+
+  const rows = await db.query.categories.findMany({ columns: { slug: true } });
+  return rows.map((row) => row.slug);
+}
+
+/*
+ * Case-insensitive keyword search. Every word must match the name, colour,
+ * category or description, so "black jacket" narrows rather than widens.
+ */
+export async function searchProducts(query: string): Promise<Product[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+
+  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return [];
+
+  const rows = await db.query.products.findMany({
+    where: (products, { and, ilike, inArray, or }) =>
+      and(
+        ...terms.map((term) => {
+          const pattern = `%${term.replace(/[\\%_]/g, "\\$&")}%`;
+          return or(
+            ilike(products.name, pattern),
+            ilike(products.color, pattern),
+            ilike(products.description, pattern),
+            inArray(
+              products.categoryId,
+              db
+                .select({ id: categories.id })
+                .from(categories)
+                .where(ilike(categories.name, pattern)),
+            ),
+          );
+        }),
+      ),
+    with: withRelations,
+    orderBy: (products, { asc, desc }) => [
+      desc(products.createdAt),
+      asc(products.id),
+    ],
   });
   return rows.map(toProduct);
 }

@@ -1,4 +1,4 @@
-# Atelier Store
+# Sartoria Store
 
 Next.js (App Router) + TypeScript + Tailwind CSS, with Better Auth, Drizzle ORM and Postgres on Neon.
 

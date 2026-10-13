@@ -17,8 +17,8 @@ const garamond = EB_Garamond({
 
 export const metadata: Metadata = {
   title: {
-    default: "Atelier | Clothing and accessories",
-    template: "%s | Atelier",
+    default: "Sartoria | Clothing and accessories",
+    template: "%s | Sartoria",
   },
   description:
     "Considered clothing, bags, shoes and jewelry, made in small runs.",

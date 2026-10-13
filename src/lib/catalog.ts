@@ -77,7 +77,7 @@ export const hero = {
   ] satisfies Picture[],
 };
 
-const lowStockThreshold = 3;
+export const lowStockThreshold = 3;
 
 export function getStockState(product: Product): StockState {
   const total = product.stock.reduce((sum, s) => sum + s.quantity, 0);
@@ -197,7 +197,7 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
   {
     title: "The House",
     links: [
-      { label: "About Atelier", href: "/about" },
+      { label: "About Sartoria", href: "/about" },
       { label: "Journal", href: "/journal" },
       { label: "Sustainability", href: "/sustainability" },
       { label: "Careers", href: "/careers" },

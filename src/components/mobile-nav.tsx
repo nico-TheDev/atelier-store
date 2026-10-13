@@ -56,6 +56,16 @@ export function MobileNav({ links }: { links: NavLink[] }) {
               </li>
             ))}
           </ul>
+          {/* The header's account icon is hidden at this width. */}
+          <div className="mt-10 hairline pt-6">
+            <Link
+              href="/account"
+              className="type-label link-quiet"
+              onClick={() => panel.current?.hidePopover()}
+            >
+              Account
+            </Link>
+          </div>
         </nav>
       </div>
     </>
