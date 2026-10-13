@@ -1,26 +1,150 @@
 @import "tailwindcss";
+@import "../styles/typography.css";
+@import "../styles/components.css";
+@import "../styles/layout.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens.
+ * The default Tailwind color and type scales are cleared so every class
+ * comes from this curated, near-monochrome system.
+ */
+@theme {
+  /* Color: ink on paper, grey tiles behind product imagery, hairline rules. */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-ink-soft: #333333; /* hover state for filled controls */
+  --color-muted: #6b6b6b; /* secondary text, 5.3:1 on paper */
+  --color-subtle: #a3a3a3; /* disabled, placeholders, decorative only */
+  --color-surface: #f5f5f5; /* product tiles, image placeholders */
+  --color-surface-strong: #ebebeb;
+  --color-line: #e5e5e5; /* hairline dividers */
+  --color-line-strong: #8a8a8a; /* form borders, 3.4:1 on paper */
+  --color-overlay: rgb(0 0 0 / 0.4);
+  --color-sale: #a8001c;
+  --color-success: #1e6b3a;
+  --color-warning: #8a5a00;
+
+  /* Type scale: small, quiet UI text; size is reserved for display moments. */
+  --text-*: initial;
+  --text-2xs: 0.6875rem; /* 11px: eyebrows, badges */
+  --text-2xs--line-height: 1rem;
+  --text-xs: 0.75rem; /* 12px: labels, buttons, nav */
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.8125rem; /* 13px: product meta, captions */
+  --text-sm--line-height: 1.25rem;
+  --text-base: 0.9375rem; /* 15px: body */
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.625rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.25rem;
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 2.625rem;
+  --text-4xl: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  --text-4xl--line-height: 1.1;
+  --text-display: clamp(2.75rem, 1.25rem + 6vw, 6.5rem);
+  --text-display--line-height: 1;
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.04em;
+  --tracking-label: 0.1em; /* uppercase UI labels */
+  --tracking-eyebrow: 0.16em;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* Spacing: Tailwind's 4px base plus fluid, semantic rhythm tokens. */
+  --spacing-gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --spacing-section: clamp(3rem, 1.75rem + 5vw, 7.5rem);
+  --spacing-header: clamp(3.5rem, 3rem + 1.5vw, 4.5rem);
+  --spacing-grid-x: 0.125rem; /* tiles almost touch */
+  --spacing-grid-y: 2.5rem; /* room for product meta below each tile */
+
+  /* Containers */
+  --container-prose: 40rem;
+  --container-narrow: 56rem;
+  --container-content: 90rem;
+  --container-page: 120rem;
+
+  /* Extra-wide desktop breakpoint */
+  --breakpoint-3xl: 120rem;
+
+  /* Square edges throughout; only pills/swatches use rounded-full. */
+  --radius-none: 0;
+  --radius-xs: 0.125rem;
+
+  --ease-luxe: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+
+  --aspect-product: 4 / 5;
+  --aspect-portrait: 3 / 4;
+  --aspect-landscape: 16 / 9;
+  --aspect-hero: 4 / 5;
 }
 
+/* Fonts come from next/font variables set on <html> in the root layout. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-garamond), ui-serif, Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-line);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    scroll-padding-top: var(--spacing-header);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  img,
+  video {
+    background-color: var(--color-surface);
+  }
+
+  hr {
+    border-color: var(--color-line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

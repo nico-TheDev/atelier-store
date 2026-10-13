@@ -1,0 +1,231 @@
+/*
+ * Controls: buttons, links, form fields.
+ * Buttons read their colors and size from --btn-* custom properties, so
+ * variant and size utilities never fight the base class over the same
+ * declaration and can be combined with responsive variants
+ * (e.g. `btn btn-secondary md:btn-lg`).
+ */
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: var(--btn-h, 3rem);
+  padding-inline: var(--btn-px, 2rem);
+  border: 1px solid var(--btn-border, var(--color-ink));
+  border-radius: 0;
+  background-color: var(--btn-bg, var(--color-ink));
+  color: var(--btn-fg, var(--color-paper));
+  font-size: var(--text-xs);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-luxe);
+
+  &:hover {
+    background-color: var(--btn-bg-hover, var(--color-ink-soft));
+    border-color: var(--btn-border-hover, var(--color-ink-soft));
+    color: var(--btn-fg-hover, var(--color-paper));
+  }
+
+  &:disabled,
+  &[aria-disabled="true"] {
+    --btn-bg: var(--color-surface-strong);
+    --btn-bg-hover: var(--color-surface-strong);
+    --btn-border: var(--color-surface-strong);
+    --btn-border-hover: var(--color-surface-strong);
+    --btn-fg: var(--color-muted);
+    --btn-fg-hover: var(--color-muted);
+    cursor: not-allowed;
+  }
+}
+
+/* Solid black: the single primary action on a screen (Add to bag, Checkout). */
+@utility btn-primary {
+  --btn-bg: var(--color-ink);
+  --btn-fg: var(--color-paper);
+  --btn-border: var(--color-ink);
+  --btn-bg-hover: var(--color-ink-soft);
+  --btn-border-hover: var(--color-ink-soft);
+  --btn-fg-hover: var(--color-paper);
+}
+
+/* Outlined: secondary actions; fills on hover. */
+@utility btn-secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-ink);
+  --btn-bg-hover: var(--color-ink);
+  --btn-border-hover: var(--color-ink);
+  --btn-fg-hover: var(--color-paper);
+}
+
+/* For use over imagery or inverse sections. */
+@utility btn-inverse {
+  --btn-bg: var(--color-paper);
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-paper);
+  --btn-bg-hover: transparent;
+  --btn-border-hover: var(--color-paper);
+  --btn-fg-hover: var(--color-paper);
+}
+
+/* Borderless text action, e.g. "Remove", "Edit". */
+@utility btn-ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-ink);
+  --btn-border: transparent;
+  --btn-bg-hover: var(--color-surface);
+  --btn-border-hover: transparent;
+  --btn-fg-hover: var(--color-ink);
+}
+
+@utility btn-sm {
+  --btn-h: 2.5rem;
+  --btn-px: 1.25rem;
+}
+
+@utility btn-lg {
+  --btn-h: 3.5rem;
+  --btn-px: 2.5rem;
+}
+
+/* Square icon-only button (bag, search, close). Needs an aria-label. */
+@utility btn-icon {
+  width: var(--btn-h, 3rem);
+
+  /* Out-specifies btn-sm / btn-lg, which also set --btn-px. */
+  &.btn {
+    --btn-px: 0;
+  }
+}
+
+@utility btn-block {
+  width: 100%;
+}
+
+/* Inline link inside running text: persistent hairline underline. */
+@utility link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  transition: text-decoration-color var(--duration-fast) var(--ease-luxe);
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}
+
+/* Quiet link: no underline until hover (footer, breadcrumbs, product names). */
+@utility link-quiet {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--duration-fast) var(--ease-luxe);
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Navigation link: uppercase label with an underline that draws in. */
+@utility link-nav {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.25rem;
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-luxe);
+  }
+
+  &:hover::after,
+  &[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Text input: underline-only field, 16px on touch screens to prevent iOS zoom. */
+@utility field {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  padding-inline: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-ink);
+  font-size: 1rem;
+  transition: border-color var(--duration-fast) var(--ease-luxe);
+
+  @media (width >= 48rem) {
+    font-size: var(--text-base);
+  }
+
+  &::placeholder {
+    color: var(--color-subtle);
+  }
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--color-ink);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 1px 0 0 var(--color-ink);
+  }
+
+  &[aria-invalid="true"] {
+    border-bottom-color: var(--color-sale);
+  }
+}
+
+/* Small rectangular tag on product tiles ("New", "Exclusive"). */
+@utility badge {
+  display: inline-flex;
+  align-items: center;
+  height: 1.25rem;
+  padding-inline: 0.375rem;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-2xs);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Hairline rules. */
+@utility hairline {
+  border-width: 0;
+  border-top-width: 1px;
+  border-color: var(--color-line);
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--color-line);
+}

@@ -1,0 +1,171 @@
+/*
+ * Layout primitives. Pages are full-bleed by default; containers add the
+ * fluid gutter and a max width. Imagery runs edge to edge on mobile.
+ */
+
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility container-content {
+  width: 100%;
+  max-width: calc(var(--container-content) + 2 * var(--spacing-gutter));
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility container-narrow {
+  width: 100%;
+  max-width: calc(var(--container-narrow) + 2 * var(--spacing-gutter));
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility container-prose {
+  width: 100%;
+  max-width: calc(var(--container-prose) + 2 * var(--spacing-gutter));
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Break a child out of a container to the full viewport width. */
+@utility full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Vertical rhythm between page sections. */
+@utility section {
+  padding-block: var(--spacing-section);
+}
+
+@utility section-sm {
+  padding-block: calc(var(--spacing-section) / 2);
+}
+
+/* Inverse section: white text on black, e.g. campaign banners, footer. */
+@utility surface-inverse {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  --color-line: rgb(255 255 255 / 0.2);
+  --color-muted: #b3b3b3;
+}
+
+/* Vertical stack with consistent gap (override with gap-* utilities). */
+@utility stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Horizontal wrapping group: nav items, filter chips, button pairs. */
+@utility cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Product listing grid: 2 → 3 → 4 columns, tiles nearly touching. */
+@utility grid-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-grid-x);
+  row-gap: var(--spacing-grid-y);
+
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (width >= 80rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Editorial split: stacked on mobile, two equal halves from md up. */
+@utility grid-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-grid-x);
+
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Auto-fitting grid for category tiles and content cards. */
+@utility grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: 1.5rem;
+}
+
+/* Product detail: gallery + sticky purchase panel from lg up. */
+@utility grid-pdp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+
+  @media (width >= 64rem) {
+    grid-template-columns: minmax(0, 3fr) minmax(22rem, 2fr);
+    gap: 0;
+  }
+}
+
+/* Media frame: fills its aspect box on the grey placeholder surface. */
+@utility media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-surface);
+
+  & > img,
+  & > video,
+  & > picture {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Product tile image: contained on grey so cutouts sit centered. */
+@utility media-product {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--aspect-product);
+  background-color: var(--color-surface);
+
+  & > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform var(--duration-slow) var(--ease-luxe);
+  }
+
+  &:hover > img {
+    transform: scale(1.03);
+  }
+}
+
+/* Full-viewport hero, minus the header. */
+@utility hero {
+  position: relative;
+  min-height: calc(100svh - var(--spacing-header));
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  color: var(--color-paper);
+}
+
+/* Fixed-height site header row. */
+@utility header-bar {
+  display: flex;
+  align-items: center;
+  height: var(--spacing-header);
+}
